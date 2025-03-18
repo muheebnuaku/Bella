@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MULTI MEDIA AND WEB DESIGN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1c1e21;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .level-selection {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .level-btn {
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            font-weight: 600;
+        }
+
+        .level-btn.easy {
+            background: #d4edda;
+            color: #28a745;
+        }
+
+        .level-btn.moderate {
+            background: #fff3cd;
+            color: #ffc107;
+        }
+
+        .level-btn.hard {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+
+        .level-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e4e6eb;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: #1877f2;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question-card, .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            color: #1877f2;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            color: #2d3436;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid #e4e6eb;
+            border-radius: 8px;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            color: #2d3436;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #f5f6f7;
+            border-color: #1877f2;
+            transform: translateX(5px);
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .result-card {
+            text-align: center;
+            display: none;
+        }
+
+        #restart-btn {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            background: #1877f2;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        #restart-btn:hover {
+            background: #0f5dc1;
+        }
+
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1877f2;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #restart-btn, #back-btn {
+          padding: 0.8rem 1.2rem;
+          border: none;
+          background: #1877f2;
+          color: white;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background 0.3s ease;
+          margin-top: 1rem;
+        }
+        #restart-btn:hover, #back-btn:hover {
+          background: #0f5dc1;
+        }
+/* Style for the back button positioned at the top of the quiz container */
+        #back-btn {
+          display: block;
+          margin-bottom: 1rem;
+          background: #6c757d;
+        }
+        .explanation {
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 8px;
+          border-left: 4px solid #1877f2;
+          display: none;
+          animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .score-display {
+          font-size: 1.5rem;
+          color: #28a745;
+          margin: 1rem 0;
+          font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Multi Media And Web Design Quiz</h1>
+        <div class="progress-bar">
+            <div class="progress" style="width: 1%"></div>
+        </div>
+    </div>
+
+    <div class="level-selection" id="level-selection">
+        <h2>Select Difficulty Level</h2>
+        <button class="level-btn easy" data-level="easy">Easy</button>
+        <button class="level-btn moderate" data-level="moderate">Moderate</button>
+        <button class="level-btn hard" data-level="hard">Hard</button>
+    </div>
+
+    <div id="quiz-container" style="display: none;">
+        <!-- Back/Quit button added here -->
+        <button id="back-btn">Quit Quiz</button>
+        <div class="question-card">
+            <div class="question-number">Question <span id="current-question">1</span>/100</div>
+            <div class="question-text" id="question-text"></div>
+            <div class="options-container" id="options-container"></div>
+            <div class="explanation" id="explanation"></div>
+        </div>
+    </div>
+
+    <div id="result-container" class="result-card">
+        <h2>Quiz Completed! 🎉</h2>
+        <div class="score-display" id="score-text"></div>
+        <button id="restart-btn">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    const questionBank = {
+  "moderate": [
+    {
+      "question": "What does MIS stand for in a business context?",
+      "options": [
+        "Management Information System",
+        "Multimedia Information Service",
+        "Management Internal System",
+        "Multi-Input Software"
+      ],
+      "answer": 0,
+      "explanation": "MIS stands for Management Information System, which supports decision-making by gathering and analyzing data."
+    },
+    {
+      "question": "Which software is most commonly used for creating spreadsheets in business?",
+      "options": [
+        "Microsoft Excel",
+        "Adobe Photoshop",
+        "Microsoft PowerPoint",
+        "CorelDRAW"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft Excel is the industry standard for spreadsheets and financial analysis."
+    },
+    {
+      "question": "What is the primary purpose of a Customer Relationship Management (CRM) system?",
+      "options": [
+        "To manage customer data and interactions",
+        "To design company logos",
+        "To automate graphic design",
+        "To schedule employee shifts"
+      ],
+      "answer": 0,
+      "explanation": "CRM systems help businesses manage customer relationships, sales, and service information."
+    },
+    {
+      "question": "Which of the following best describes an Enterprise Resource Planning (ERP) system?",
+      "options": [
+        "An integrated system that manages core business processes",
+        "A tool for graphic design",
+        "A scheduling application for meetings",
+        "A software for simple data entry"
+      ],
+      "answer": 0,
+      "explanation": "ERP systems integrate various functions (finance, HR, supply chain) into one system to streamline processes."
+    },
+    {
+      "question": "What is a key advantage of cloud computing in business applications?",
+      "options": [
+        "Scalability, cost-efficiency, and global accessibility",
+        "Increased hardware maintenance",
+        "Dependence on local storage only",
+        "Slower network performance"
+      ],
+      "answer": 0,
+      "explanation": "Cloud computing offers scalability, reduced capital expenditure, and the ability to access applications from anywhere."
+    },
+    {
+      "question": "Which application is primarily used for word processing in most business environments?",
+      "options": [
+        "Microsoft Word",
+        "Microsoft Excel",
+        "Adobe Illustrator",
+        "Microsoft Access"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft Word is the go-to software for creating and editing business documents."
+    },
+    {
+      "question": "In the context of business computing, what does 'virtualization' refer to?",
+      "options": [
+        "Creating virtual versions of hardware and operating systems",
+        "Using virtual reality for training",
+        "Designing websites using virtual tools",
+        "Implementing cloud storage solutions"
+      ],
+      "answer": 0,
+      "explanation": "Virtualization allows multiple virtual machines to run on a single physical server, improving resource use and reducing costs."
+    },
+    {
+      "question": "Which of the following is a widely used database management system in business?",
+      "options": [
+        "Oracle Database",
+        "Microsoft Word",
+        "Adobe Premiere Pro",
+        "Microsoft PowerPoint"
+      ],
+      "answer": 0,
+      "explanation": "Oracle Database is a robust and popular system used for managing large amounts of business data."
+    },
+    {
+      "question": "What is the primary function of Business Intelligence (BI) applications?",
+      "options": [
+        "Analyzing data to support business decision-making",
+        "Creating graphic designs",
+        "Managing employee payroll",
+        "Scheduling meetings"
+      ],
+      "answer": 0,
+      "explanation": "BI applications help companies analyze data trends to drive strategic decisions."
+    },
+    {
+      "question": "What is the main function of Enterprise Content Management (ECM) systems in business?",
+      "options": [
+        "Centralized management of documents and digital content",
+        "Creating visual presentations",
+        "Managing email servers",
+        "Designing company logos"
+      ],
+      "answer": 0,
+      "explanation": "ECM systems streamline the storage, management, and retrieval of documents and digital assets."
+    },
+    {
+      "question": "Which technology is most commonly used to support remote work and virtual meetings in businesses?",
+      "options": [
+        "Video conferencing tools like Zoom or Microsoft Teams",
+        "Desktop publishing software",
+        "Local file storage systems",
+        "Graphic design applications"
+      ],
+      "answer": 0,
+      "explanation": "Video conferencing tools are essential for facilitating remote communication and collaboration."
+    },
+    {
+      "question": "Which application is primarily used for creating business presentations?",
+      "options": [
+        "Microsoft PowerPoint",
+        "Microsoft Excel",
+        "Adobe Photoshop",
+        "Microsoft Access"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft PowerPoint is the standard tool for designing slides and presentations."
+    },
+    {
+      "question": "What does the term 'Big Data' refer to in business applications?",
+      "options": [
+        "Large volumes of data that require advanced analysis tools",
+        "Small datasets used for basic reporting",
+        "Data that is stored only on local machines",
+        "Data that cannot be analyzed effectively"
+      ],
+      "answer": 0,
+      "explanation": "Big Data involves vast amounts of data that need specialized methods for storage and analysis."
+    },
+    {
+      "question": "Which of the following is a primary benefit of automation software in business processes?",
+      "options": [
+        "Increased efficiency and reduction in manual errors",
+        "Higher operational costs",
+        "Reduced customer satisfaction",
+        "Longer processing times"
+      ],
+      "answer": 0,
+      "explanation": "Automation reduces manual work, minimizes errors, and increases overall efficiency."
+    },
+    {
+      "question": "How do business applications typically use databases to support operations?",
+      "options": [
+        "To store, manage, and retrieve large volumes of business data",
+        "To create visual presentations",
+        "To design marketing materials",
+        "To replace email communication"
+      ],
+      "answer": 0,
+      "explanation": "Databases are critical for storing and managing the data that drives business operations."
+    },
+    {
+      "question": "Which of the following best describes cloud-based business applications?",
+      "options": [
+        "Software and services accessed over the Internet from remote servers",
+        "Applications installed on individual desktop computers",
+        "Software that only works on local networks",
+        "Applications that require physical media for installation"
+      ],
+      "answer": 0,
+      "explanation": "Cloud-based applications are hosted on remote servers and accessed via the Internet, providing flexibility and scalability."
+    },
+    {
+      "question": "Which technology is primarily used to protect business data from unauthorized access?",
+      "options": [
+        "Cybersecurity measures such as firewalls and encryption",
+        "Cloud storage services",
+        "Presentation software",
+        "Spreadsheet applications"
+      ],
+      "answer": 0,
+      "explanation": "Cybersecurity tools, including firewalls and encryption, are essential for protecting sensitive business data."
+    },
+    {
+      "question": "What is one major advantage of using virtualization in a business IT environment?",
+      "options": [
+        "It allows multiple virtual machines to run on a single physical server, reducing hardware costs",
+        "It increases the need for physical hardware maintenance",
+        "It requires more space for physical servers",
+        "It is used only for testing purposes"
+      ],
+      "answer": 0,
+      "explanation": "Virtualization consolidates server resources, cutting hardware costs and improving efficiency."
+    },
+    {
+      "question": "What is the role of data analytics in computer applications for business?",
+      "options": [
+        "To interpret data and support informed business decisions",
+        "To create marketing materials",
+        "To design websites",
+        "To manage employee attendance"
+      ],
+      "answer": 0,
+      "explanation": "Data analytics transforms raw data into insights that drive strategic decision-making."
+    },
+    {
+      "question": "Which of the following best describes the use of spreadsheets in financial analysis?",
+      "options": [
+        "They help model budgets, forecasts, and perform quantitative analysis",
+        "They are used only for data entry",
+        "They replace the need for databases",
+        "They are mainly for creating charts"
+      ],
+      "answer": 0,
+      "explanation": "Spreadsheets are powerful tools for budgeting, forecasting, and performing financial calculations."
+    },
+    {
+      "question": "What is the purpose of using statistical software in business?",
+      "options": [
+        "To perform complex data analysis and predict trends",
+        "To design logos",
+        "To create website layouts",
+        "To manage email communications"
+      ],
+      "answer": 0,
+      "explanation": "Statistical software enables advanced data analysis and forecasting, critical for business strategy."
+    },
+    {
+      "question": "Which application is used to manage large volumes of business transactions?",
+      "options": [
+        "Enterprise Resource Planning (ERP) systems",
+        "Graphic design software",
+        "Word processors",
+        "Spreadsheet applications"
+      ],
+      "answer": 0,
+      "explanation": "ERP systems integrate and manage core business transactions across various functions."
+    },
+    {
+      "question": "How does a Decision Support System (DSS) benefit businesses?",
+      "options": [
+        "By providing data-driven insights and supporting complex decision-making",
+        "By automating graphic design",
+        "By increasing manual data entry",
+        "By managing social media accounts"
+      ],
+      "answer": 0,
+      "explanation": "DSS tools analyze data to help managers make informed decisions."
+    },
+    {
+      "question": "What is the primary function of supply chain management software?",
+      "options": [
+        "To coordinate and optimize the flow of goods and services",
+        "To design marketing campaigns",
+        "To manage internal emails",
+        "To create business presentations"
+      ],
+      "answer": 0,
+      "explanation": "Supply chain management software streamlines procurement, production, and distribution processes."
+    },
+    {
+      "question": "Which technology helps businesses forecast sales trends?",
+      "options": [
+        "Predictive analytics",
+        "Graphic design software",
+        "Spreadsheet formatting",
+        "Presentation tools"
+      ],
+      "answer": 0,
+      "explanation": "Predictive analytics uses historical data to forecast future trends and inform sales strategies."
+    },
+    {
+      "question": "What does ERP integration allow within a business environment?",
+      "options": [
+        "Seamless sharing of data across different departments",
+        "Isolated departmental operations",
+        "Only financial data management",
+        "Manual data transfers between systems"
+      ],
+      "answer": 0,
+      "explanation": "ERP integration enables real-time data sharing among departments, improving efficiency."
+    },
+    {
+      "question": "Which of the following is a benefit of using cloud-based collaboration tools?",
+      "options": [
+        "Real-time collaboration from any location",
+        "Increased hardware costs",
+        "Limited access to documents",
+        "Decreased security"
+      ],
+      "answer": 0,
+      "explanation": "Cloud collaboration tools enable teams to work together in real time regardless of location."
+    },
+    {
+      "question": "How does virtualization improve disaster recovery in business IT?",
+      "options": [
+        "By enabling rapid backup and recovery of virtual machines",
+        "By requiring more physical servers",
+        "By increasing recovery times",
+        "By eliminating the need for backups"
+      ],
+      "answer": 0,
+      "explanation": "Virtualization simplifies disaster recovery through easier backup and quicker restoration of virtual environments."
+    },
+    {
+      "question": "Which software tool is most commonly used for data visualization in business analytics?",
+      "options": [
+        "Tableau",
+        "Microsoft Word",
+        "Adobe Premiere Pro",
+        "CorelDRAW"
+      ],
+      "answer": 0,
+      "explanation": "Tableau is a leading data visualization tool that helps create interactive and insightful dashboards."
+    },
+    {
+      "question": "What role does a Content Management System (CMS) play in a business's online presence?",
+      "options": [
+        "It manages and organizes website content for easy updates",
+        "It creates graphic designs",
+        "It handles email marketing exclusively",
+        "It only stores financial data"
+      ],
+      "answer": 0,
+      "explanation": "A CMS streamlines the process of publishing, editing, and managing website content."
+    },
+    {
+      "question": "How do Customer Relationship Management (CRM) systems improve sales processes?",
+      "options": [
+        "By tracking customer interactions and automating follow-ups",
+        "By designing logos",
+        "By managing server hardware",
+        "By storing images"
+      ],
+      "answer": 0,
+      "explanation": "CRM systems provide tools to track leads, manage communications, and streamline sales workflows."
+    },
+    {
+      "question": "What is the benefit of using mobile business applications?",
+      "options": [
+        "They allow employees to access critical data on the go",
+        "They increase office hardware costs",
+        "They replace desktop applications entirely",
+        "They limit data access to the office"
+      ],
+      "answer": 0,
+      "explanation": "Mobile apps enable remote access to business applications, boosting productivity and responsiveness."
+    },
+    {
+      "question": "How does artificial intelligence (AI) influence business decision-making processes?",
+      "options": [
+        "By automating data analysis and providing predictive insights",
+        "By increasing manual tasks",
+        "By designing marketing materials",
+        "By reducing data storage capacity"
+      ],
+      "answer": 0,
+      "explanation": "AI technologies enhance decision making by quickly analyzing data and identifying trends."
+    },
+    {
+      "question": "Which tool is widely used for project management in business?",
+      "options": [
+        "Asana",
+        "Adobe Photoshop",
+        "Microsoft Publisher",
+        "CorelDRAW"
+      ],
+      "answer": 0,
+      "explanation": "Asana is a popular project management tool that helps teams track tasks and collaborate."
+    },
+    {
+      "question": "What is the purpose of using an intranet in a business organization?",
+      "options": [
+        "To facilitate internal communication and resource sharing",
+        "To host public websites",
+        "To design external marketing campaigns",
+        "To replace email communication entirely"
+      ],
+      "answer": 0,
+      "explanation": "An intranet serves as a private network for employees to access internal resources and communicate."
+    },
+    {
+      "question": "How do business applications utilize cloud storage?",
+      "options": [
+        "To store data remotely and allow access from multiple locations",
+        "To force local storage on devices",
+        "To increase data redundancy locally",
+        "To replace all desktop applications"
+      ],
+      "answer": 0,
+      "explanation": "Cloud storage provides scalable and accessible storage solutions that support collaboration and backup."
+    },
+    {
+      "question": "Which software is best for designing professional business documents?",
+      "options": [
+        "Microsoft Word",
+        "Microsoft Excel",
+        "Adobe After Effects",
+        "Microsoft Access"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft Word is ideal for creating formatted, professional business documents."
+    },
+    {
+      "question": "What is the role of an online payment gateway in e-commerce?",
+      "options": [
+        "To securely process credit card transactions",
+        "To design websites",
+        "To manage email campaigns",
+        "To host video conferences"
+      ],
+      "answer": 0,
+      "explanation": "Online payment gateways securely process transactions, ensuring data protection and smooth payment processing."
+    },
+    {
+      "question": "How does e-commerce software benefit small and medium businesses?",
+      "options": [
+        "By enabling online sales and reducing the need for a physical storefront",
+        "By increasing operating costs significantly",
+        "By requiring extensive IT infrastructure",
+        "By limiting product offerings"
+      ],
+      "answer": 0,
+      "explanation": "E-commerce software allows businesses to reach a wider market online, often at lower costs than traditional retail."
+    },
+    {
+      "question": "What is the purpose of a digital signature in business transactions?",
+      "options": [
+        "To verify the authenticity and integrity of electronic documents",
+        "To design logos",
+        "To create email marketing campaigns",
+        "To compress document files"
+      ],
+      "answer": 0,
+      "explanation": "Digital signatures authenticate the sender and ensure that the document has not been altered."
+    },
+    {
+      "question": "Which technology is central to the functioning of blockchain in business?",
+      "options": [
+        "Decentralized ledger technology",
+        "Centralized databases",
+        "Traditional FTP servers",
+        "Local storage solutions"
+      ],
+      "answer": 0,
+      "explanation": "Blockchain is based on a decentralized ledger that records transactions in a secure, immutable way."
+    },
+    {
+      "question": "How does a Learning Management System (LMS) benefit corporate training?",
+      "options": [
+        "By providing a platform for online courses and tracking employee progress",
+        "By replacing all in-person training entirely",
+        "By managing payroll systems",
+        "By creating company logos"
+      ],
+      "answer": 0,
+      "explanation": "An LMS streamlines the delivery and tracking of training programs, improving employee development."
+    },
+    {
+      "question": "Which of the following is an example of a collaborative business tool?",
+      "options": [
+        "Slack",
+        "Adobe Photoshop",
+        "Microsoft Word (offline)",
+        "CorelDRAW"
+      ],
+      "answer": 0,
+      "explanation": "Slack is a widely used collaboration platform for team communication and project coordination."
+    },
+    {
+      "question": "What is the primary function of a Human Resources Information System (HRIS)?",
+      "options": [
+        "To manage employee data, payroll, and benefits",
+        "To design marketing materials",
+        "To create graphic designs",
+        "To host company websites"
+      ],
+      "answer": 0,
+      "explanation": "HRIS systems centralize employee records, payroll, and other HR functions for efficient management."
+    },
+    {
+      "question": "How do database management systems support customer data management?",
+      "options": [
+        "By storing and organizing large volumes of customer information securely",
+        "By designing logos",
+        "By managing graphic design files",
+        "By creating presentations"
+      ],
+      "answer": 0,
+      "explanation": "DBMS platforms securely store, update, and retrieve customer data essential for business operations."
+    },
+    {
+      "question": "What is the role of email marketing software in business?",
+      "options": [
+        "To create and distribute marketing emails to targeted customer groups",
+        "To design business documents",
+        "To develop mobile apps",
+        "To manage hardware inventory"
+      ],
+      "answer": 0,
+      "explanation": "Email marketing software automates the creation, sending, and tracking of marketing emails."
+    },
+    {
+      "question": "Which application is primarily used for designing marketing materials?",
+      "options": [
+        "Adobe InDesign",
+        "Microsoft Excel",
+        "Oracle Database",
+        "Microsoft Word"
+      ],
+      "answer": 0,
+      "explanation": "Adobe InDesign is a professional tool for layout and design, widely used in marketing and publishing."
+    },
+    {
+      "question": "How do business applications utilize ERP modules to improve efficiency?",
+      "options": [
+        "By integrating different business processes into a single system",
+        "By isolating departments completely",
+        "By eliminating customer data management",
+        "By increasing manual data entry"
+      ],
+      "answer": 0,
+      "explanation": "ERP modules integrate various functions, allowing seamless data flow and improved operational efficiency."
+    },
+    {
+      "question": "What is a key feature of modern Business Intelligence (BI) dashboards?",
+      "options": [
+        "Real-time data visualization and interactive reporting",
+        "Static text-only reports",
+        "Manual data updates",
+        "Limited data filtering"
+      ],
+      "answer": 0,
+      "explanation": "Modern BI dashboards offer interactive, real-time visualizations to help users quickly grasp performance metrics."
+    },
+    {
+      "question": "How does cloud computing reduce IT infrastructure costs in business?",
+      "options": [
+        "By eliminating the need for on-premise hardware and reducing maintenance expenses",
+        "By increasing power consumption",
+        "By requiring more physical servers",
+        "By limiting scalability"
+      ],
+      "answer": 0,
+      "explanation": "Cloud computing offloads infrastructure management to providers, cutting capital and operational expenses."
+    },
+    {
+      "question": "What is the role of predictive analytics in business?",
+      "options": [
+        "To forecast future trends and help guide strategic decisions",
+        "To design company logos",
+        "To manage email systems",
+        "To create static documents"
+      ],
+      "answer": 0,
+      "explanation": "Predictive analytics uses historical data to forecast future outcomes, aiding in proactive decision-making."
+    },
+    {
+      "question": "How do CRM systems integrate with social media for enhanced customer insights?",
+      "options": [
+        "By aggregating data from social platforms to better understand customer behavior",
+        "By disabling social media interactions",
+        "By replacing email communication",
+        "By limiting customer feedback"
+      ],
+      "answer": 0,
+      "explanation": "Integrating CRM with social media allows businesses to capture customer sentiment and interaction data."
+    },
+    {
+      "question": "Which application helps in managing inventory levels in retail businesses?",
+      "options": [
+        "Inventory Management Systems",
+        "Word processors",
+        "Graphic design tools",
+        "Presentation software"
+      ],
+      "answer": 0,
+      "explanation": "Inventory Management Systems track stock levels and help optimize inventory processes in retail."
+    },
+    {
+      "question": "What is the primary benefit of using SaaS (Software as a Service) for business applications?",
+      "options": [
+        "Lower upfront costs and ease of access over the Internet",
+        "Higher initial investment",
+        "Limited accessibility",
+        "Increased on-premise infrastructure"
+      ],
+      "answer": 0,
+      "explanation": "SaaS provides subscription-based software accessible online without significant capital investment."
+    },
+    {
+      "question": "How do modern business applications ensure data security?",
+      "options": [
+        "By using encryption, multi-factor authentication, and regular security updates",
+        "By ignoring data backups",
+        "By allowing open access to all users",
+        "By disabling firewalls"
+      ],
+      "answer": 0,
+      "explanation": "Robust security measures such as encryption and multi-factor authentication protect business data."
+    },
+    {
+      "question": "Which tool is used for conducting market research in a business?",
+      "options": [
+        "Survey software like SurveyMonkey",
+        "Spreadsheet applications only",
+        "Graphic design tools",
+        "Email clients"
+      ],
+      "answer": 0,
+      "explanation": "Market research tools help gather and analyze consumer opinions and trends."
+    },
+    {
+      "question": "What is the importance of scalability in business IT solutions?",
+      "options": [
+        "It allows systems to grow and adapt to increasing demands without performance loss",
+        "It requires constant hardware upgrades",
+        "It limits user access",
+        "It decreases system flexibility"
+      ],
+      "answer": 0,
+      "explanation": "Scalability ensures that business applications can handle growth in users or data without degradation."
+    },
+    {
+      "question": "How do business applications support remote access to critical data?",
+      "options": [
+        "Through secure VPNs and cloud-based platforms",
+        "By restricting data to local networks only",
+        "By disabling Internet access",
+        "By using only desktop installations"
+      ],
+      "answer": 0,
+      "explanation": "Remote access is enabled via secure connections such as VPNs and cloud services, ensuring data is available from anywhere."
+    },
+    {
+      "question": "Which application is primarily used for scheduling and calendar management in business?",
+      "options": [
+        "Microsoft Outlook",
+        "Adobe Photoshop",
+        "Oracle Database",
+        "Microsoft Access"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft Outlook offers robust calendar and scheduling features widely used in business."
+    },
+    {
+      "question": "What does BYOD stand for, and why is it important in modern business?",
+      "options": [
+        "Bring Your Own Device; it promotes flexibility and cost savings by allowing employees to use personal devices",
+        "Build Your Own Database; it is not related to employee devices",
+        "Buy Your Own Device; it increases costs",
+        "Bring Your Own Data; it is not a common practice"
+      ],
+      "answer": 0,
+      "explanation": "BYOD policies allow employees to use personal devices for work, increasing mobility and reducing hardware expenses."
+    },
+    {
+      "question": "How does virtualization support cost-effective IT resource management?",
+      "options": [
+        "By consolidating servers and reducing energy and hardware costs",
+        "By increasing the number of physical servers needed",
+        "By requiring specialized hardware only",
+        "By eliminating the need for operating systems"
+      ],
+      "answer": 0,
+      "explanation": "Virtualization optimizes resource use by allowing multiple virtual systems on a single physical server."
+    },
+    {
+      "question": "Which of the following best describes a cloud-based CRM system?",
+      "options": [
+        "A CRM system hosted on remote servers and accessed via the Internet",
+        "A CRM installed on local computers only",
+        "A CRM that requires extensive hardware installations",
+        "A CRM that does not support mobile access"
+      ],
+      "answer": 0,
+      "explanation": "Cloud-based CRM systems offer remote access, scalability, and lower maintenance compared to on-premise solutions."
+    },
+    {
+      "question": "What is the role of collaboration platforms in modern business environments?",
+      "options": [
+        "They enable real-time communication and file sharing among team members",
+        "They restrict information sharing",
+        "They are used only for customer support",
+        "They replace all in-person meetings entirely"
+      ],
+      "answer": 0,
+      "explanation": "Collaboration platforms foster teamwork and efficient communication across dispersed teams."
+    },
+    {
+      "question": "How does an ERP system improve cross-departmental communication?",
+      "options": [
+        "By integrating data from various departments into a single unified system",
+        "By isolating each department's data",
+        "By eliminating the need for email",
+        "By using only manual data entry"
+      ],
+      "answer": 0,
+      "explanation": "ERP systems centralize information, enabling seamless communication and data sharing across departments."
+    },
+    {
+      "question": "Which technology is used to monitor real-time business performance?",
+      "options": [
+        "Dashboard and performance management tools",
+        "Static document editors",
+        "Traditional spreadsheets only",
+        "Offline databases"
+      ],
+      "answer": 0,
+      "explanation": "Real-time dashboards aggregate and visualize key performance indicators for instant monitoring."
+    },
+    {
+      "question": "What is the function of a business dashboard in performance management?",
+      "options": [
+        "To provide a visual summary of key metrics and performance indicators",
+        "To store large volumes of data",
+        "To design company logos",
+        "To replace human decision-making entirely"
+      ],
+      "answer": 0,
+      "explanation": "Business dashboards offer visual insights into performance data, aiding in quick decision-making."
+    },
+    {
+      "question": "How do supply chain management applications improve operational efficiency?",
+      "options": [
+        "By optimizing logistics, inventory, and procurement processes",
+        "By increasing manual data entry",
+        "By isolating departments from one another",
+        "By eliminating the need for transportation"
+      ],
+      "answer": 0,
+      "explanation": "Supply chain applications streamline processes to reduce costs and improve efficiency across operations."
+    },
+    {
+      "question": "What is one primary benefit of integrating data analytics into business operations?",
+      "options": [
+        "It enables data-driven decision-making and improves strategic planning",
+        "It increases the need for manual reports",
+        "It slows down the decision process",
+        "It limits data availability to executives only"
+      ],
+      "answer": 0,
+      "explanation": "Data analytics provides actionable insights that drive better decisions and competitive strategies."
+    },
+    {
+      "question": "How does mobile technology support field operations in businesses?",
+      "options": [
+        "By providing real-time access to data and communication tools on the go",
+        "By requiring employees to return to the office for data access",
+        "By limiting functionality to desktop applications",
+        "By reducing connectivity in remote areas"
+      ],
+      "answer": 0,
+      "explanation": "Mobile technology enables field employees to access essential information and communicate without delay."
+    },
+    {
+      "question": "Which application is used to track employee performance and productivity?",
+      "options": [
+        "Performance management software",
+        "Graphic design tools",
+        "Word processors",
+        "Spreadsheet applications only"
+      ],
+      "answer": 0,
+      "explanation": "Performance management software monitors and evaluates employee productivity to drive improvements."
+    },
+    {
+      "question": "What is the significance of cybersecurity in protecting business applications?",
+      "options": [
+        "It safeguards sensitive data and maintains the integrity of business operations",
+        "It is not relevant to modern business",
+        "It only affects personal computers",
+        "It slows down network performance"
+      ],
+      "answer": 0,
+      "explanation": "Effective cybersecurity measures protect business assets from cyber threats and data breaches."
+    },
+    {
+      "question": "How does cloud-based data backup improve business continuity?",
+      "options": [
+        "By ensuring data is stored offsite and can be restored quickly after an outage",
+        "By requiring manual backups regularly",
+        "By slowing down data retrieval",
+        "By increasing local storage costs"
+      ],
+      "answer": 0,
+      "explanation": "Cloud backups provide reliable, offsite data storage that helps ensure business operations can resume swiftly after disruptions."
+    },
+    {
+      "question": "Which technology is used to facilitate online customer service and support?",
+      "options": [
+        "Live chat and helpdesk software",
+        "Graphic design applications",
+        "Spreadsheet tools",
+        "Email clients only"
+      ],
+      "answer": 0,
+      "explanation": "Live chat and helpdesk software enable real-time support, improving customer service efficiency."
+    },
+    {
+      "question": "What role does a virtual private network (VPN) play in business security?",
+      "options": [
+        "It secures remote connections by encrypting data transmitted over the Internet",
+        "It increases data transmission speed",
+        "It replaces the need for firewalls",
+        "It only works on local networks"
+      ],
+      "answer": 0,
+      "explanation": "VPNs encrypt data for secure remote access, protecting sensitive business information."
+    },
+    {
+      "question": "How does enterprise mobility impact business productivity?",
+      "options": [
+        "By enabling employees to work remotely and access systems from various devices",
+        "By requiring all work to be done on-site",
+        "By limiting application functionality to desktops",
+        "By increasing operational costs significantly"
+      ],
+      "answer": 0,
+      "explanation": "Enterprise mobility boosts productivity by providing access to business applications anytime and anywhere."
+    },
+    {
+      "question": "What is the primary purpose of business process automation software?",
+      "options": [
+        "To automate repetitive tasks and streamline workflows",
+        "To increase manual workload",
+        "To create graphic designs",
+        "To manage social media accounts exclusively"
+      ],
+      "answer": 0,
+      "explanation": "Automation software reduces manual effort and errors, leading to more efficient business processes."
+    },
+    {
+      "question": "How do collaboration tools like Slack or Microsoft Teams improve business communication?",
+      "options": [
+        "By offering real-time messaging, file sharing, and integration with other apps",
+        "By replacing all email communication permanently",
+        "By isolating team members in separate channels",
+        "By limiting the number of conversations"
+      ],
+      "answer": 0,
+      "explanation": "These tools centralize communication, making it easier for teams to collaborate and share information."
+    },
+    {
+      "question": "Which technology is most associated with real-time communication in business?",
+      "options": [
+        "Instant messaging and video conferencing",
+        "Printed memos",
+        "Fax machines",
+        "Static websites"
+      ],
+      "answer": 0,
+      "explanation": "Instant messaging and video conferencing tools are key to real-time communication in modern organizations."
+    },
+    {
+      "question": "How do modern businesses use data warehousing for decision-making?",
+      "options": [
+        "By consolidating data from multiple sources for analysis and reporting",
+        "By storing data in separate, unconnected systems",
+        "By eliminating historical data storage",
+        "By relying solely on real-time data feeds"
+      ],
+      "answer": 0,
+      "explanation": "Data warehouses centralize data, making it easier to perform complex queries and support business decisions."
+    },
+    {
+      "question": "What is the function of a business process management (BPM) system?",
+      "options": [
+        "To model, monitor, and optimize business processes",
+        "To create marketing materials",
+        "To design logos",
+        "To manage only IT infrastructure"
+      ],
+      "answer": 0,
+      "explanation": "BPM systems help organizations analyze and improve their processes for enhanced efficiency."
+    },
+    {
+      "question": "Which application is primarily used for creating professional business reports?",
+      "options": [
+        "Microsoft Power BI",
+        "Adobe Photoshop",
+        "CorelDRAW",
+        "Microsoft Publisher"
+      ],
+      "answer": 0,
+      "explanation": "Microsoft Power BI is a leading tool for business reporting and data visualization."
+    },
+    {
+      "question": "How does digital transformation affect traditional business operations?",
+      "options": [
+        "By integrating new digital technologies to streamline processes and improve efficiency",
+        "By eliminating the need for human resources entirely",
+        "By increasing paper-based workflows",
+        "By reverting to legacy systems"
+      ],
+      "answer": 0,
+      "explanation": "Digital transformation modernizes business processes, leading to increased efficiency and competitiveness."
+    },
+    {
+      "question": "What is a key characteristic of an effective Customer Relationship Management system?",
+      "options": [
+        "It provides a 360-degree view of customer interactions",
+        "It only stores basic contact details",
+        "It operates in isolation from other systems",
+        "It limits data sharing between departments"
+      ],
+      "answer": 0,
+      "explanation": "Effective CRM systems consolidate all customer interactions to offer comprehensive insights and support better service."
+    },
+    {
+      "question": "Which technology is critical for secure online transactions in business?",
+      "options": [
+        "SSL/TLS encryption",
+        "Plain HTTP",
+        "Unencrypted FTP",
+        "Basic text protocols"
+      ],
+      "answer": 0,
+      "explanation": "SSL/TLS encrypts data transmitted over the Internet, ensuring the security of online transactions."
+    },
+    {
+      "question": "How do business applications utilize cloud platforms for scalability?",
+      "options": [
+        "By leveraging on-demand resources and elastic infrastructure",
+        "By requiring fixed hardware installations",
+        "By limiting the number of users",
+        "By increasing manual data processing"
+      ],
+      "answer": 0,
+      "explanation": "Cloud platforms offer elastic resources that can scale up or down based on demand, supporting business growth."
+    },
+    {
+      "question": "What is the role of social media management tools in business marketing?",
+      "options": [
+        "They help schedule, monitor, and analyze social media campaigns",
+        "They are used solely for internal communication",
+        "They replace the need for a website",
+        "They manage hardware inventories"
+      ],
+      "answer": 0,
+      "explanation": "Social media management tools centralize campaign management, enabling effective digital marketing strategies."
+    },
+    {
+      "question": "How do businesses use analytics software to measure campaign performance?",
+      "options": [
+        "By tracking metrics such as click-through rates, conversions, and engagement levels",
+        "By manually counting emails",
+        "By using only qualitative feedback",
+        "By ignoring social media data"
+      ],
+      "answer": 0,
+      "explanation": "Analytics software provides quantitative data that helps measure and optimize marketing campaigns."
+    },
+    {
+      "question": "Which application is commonly used for managing business budgets and forecasting?",
+      "options": [
+        "Microsoft Excel",
+        "Adobe Illustrator",
+        "CorelDRAW",
+        "Microsoft PowerPoint"
+      ],
+      "answer": 0,
+      "explanation": "Excel is widely used for budgeting, financial forecasting, and data analysis in business."
+    },
+    {
+      "question": "What is the purpose of integrating ERP and CRM systems in a business environment?",
+      "options": [
+        "To unify data across sales, operations, and customer service for improved decision-making",
+        "To isolate financial data from customer data",
+        "To replace the need for human resources",
+        "To simplify graphic design processes"
+      ],
+      "answer": 0,
+      "explanation": "Integration of ERP and CRM systems ensures data consistency and improves overall business workflow."
+    },
+    {
+      "question": "How does machine learning contribute to predictive analytics in business?",
+      "options": [
+        "By identifying patterns and forecasting future trends from large datasets",
+        "By manually analyzing spreadsheets",
+        "By replacing all human decision-making",
+        "By solely focusing on graphic design"
+      ],
+      "answer": 0,
+      "explanation": "Machine learning algorithms automate the discovery of patterns and enhance predictive accuracy in business analytics."
+    },
+    {
+      "question": "What is the role of business applications in streamlining human resources processes?",
+      "options": [
+        "They automate recruitment, payroll, and performance evaluations",
+        "They design company logos",
+        "They focus solely on IT operations",
+        "They limit employee communication"
+      ],
+      "answer": 0,
+      "explanation": "HR applications automate administrative tasks, improving efficiency and reducing errors in HR management."
+    },
+    {
+      "question": "How do digital marketing platforms enhance customer engagement?",
+      "options": [
+        "By enabling personalized communications and targeted advertising",
+        "By reducing online visibility",
+        "By limiting customer data access",
+        "By relying only on traditional media"
+      ],
+      "answer": 0,
+      "explanation": "Digital marketing platforms use data-driven strategies to personalize engagement and optimize advertising efforts."
+    },
+    {
+      "question": "Which tool is used for online document collaboration in business?",
+      "options": [
+        "Google Docs",
+        "Microsoft Paint",
+        "Adobe Flash",
+        "CorelDRAW"
+      ],
+      "answer": 0,
+      "explanation": "Google Docs enables real-time collaboration on documents, improving teamwork and productivity."
+    },
+    {
+      "question": "What is the significance of real-time data analytics for business decision-making?",
+      "options": [
+        "It enables quick responses to changing market conditions",
+        "It slows down decision processes",
+        "It is irrelevant to modern business",
+        "It only benefits IT departments"
+      ],
+      "answer": 0,
+      "explanation": "Real-time analytics provide up-to-the-minute insights, allowing businesses to react swiftly to new trends."
+    },
+    {
+      "question": "How do business applications support remote workforces?",
+      "options": [
+        "By providing cloud-based tools and secure remote access",
+        "By limiting network access to office hours",
+        "By requiring physical presence for data access",
+        "By using outdated software exclusively"
+      ],
+      "answer": 0,
+      "explanation": "Remote work is facilitated by cloud applications, VPNs, and collaboration tools that maintain productivity outside the office."
+    },
+    {
+      "question": "Which software application is widely used for managing business contacts?",
+      "options": [
+        "Customer Relationship Management (CRM) systems",
+        "Spreadsheet editors",
+        "Graphic design tools",
+        "Video editing software"
+      ],
+      "answer": 0,
+      "explanation": "CRM systems are designed to store and manage customer and contact information efficiently."
+    },
+    {
+      "question": "What is the role of cloud computing in modern business operations?",
+      "options": [
+        "To provide scalable, on-demand computing resources over the Internet",
+        "To force businesses to invest in physical servers",
+        "To limit access to data",
+        "To replace all traditional business applications"
+      ],
+      "answer": 0,
+      "explanation": "Cloud computing enables businesses to scale resources and reduce costs by outsourcing infrastructure management."
+    },
+    {
+      "question": "How do business applications facilitate data-driven strategies?",
+      "options": [
+        "By collecting, analyzing, and presenting data for informed decision-making",
+        "By eliminating the need for data analysis",
+        "By relying solely on intuition",
+        "By using only static reports"
+      ],
+      "answer": 0,
+      "explanation": "Data-driven strategies rely on robust data analytics to guide strategic planning and operational improvements."
+    },
+    {
+      "question": "What is the primary benefit of using integrated business software solutions?",
+      "options": [
+        "They provide a unified platform for all business functions, improving efficiency",
+        "They increase complexity without benefits",
+        "They require separate training for each module",
+        "They isolate departments from one another"
+      ],
+      "answer": 0,
+      "explanation": "Integrated solutions streamline processes and data sharing across departments, reducing redundancies."
+    },
+    {
+      "question": "How do customer feedback systems influence business strategy?",
+      "options": [
+        "They provide insights that help tailor products and services to customer needs",
+        "They only collect data for marketing purposes",
+        "They delay the product development process",
+        "They are not useful in decision-making"
+      ],
+      "answer": 0,
+      "explanation": "Customer feedback systems deliver valuable insights that can drive strategic changes and improve overall business performance."
+    }
+  ]
+}
+
+
+;
+
+    let currentQuestion = 0;
+    let score = 0;
+    let currentQuestions = [];
+    const elements = {
+      levelSelection: document.getElementById('level-selection'),
+      quizContainer: document.getElementById('quiz-container'),
+      questionText: document.getElementById('question-text'),
+      optionsContainer: document.getElementById('options-container'),
+      currentQuestionSpan: document.getElementById('current-question'),
+      progressBar: document.querySelector('.progress'),
+      resultContainer: document.getElementById('result-container'),
+      scoreText: document.getElementById('score-text'),
+      explanation: document.getElementById('explanation'),
+      restartBtn: document.getElementById('restart-btn'),
+      backBtn: document.getElementById('back-btn')
+    };
+
+    // Initialize event listeners
+    document.querySelectorAll('.level-btn').forEach(btn => {
+      btn.addEventListener('click', handleLevelSelection);
+    });
+
+    elements.restartBtn.addEventListener('click', restartQuiz);
+    elements.backBtn.addEventListener('click', backToLevelSelection);
+
+    function handleLevelSelection(e) {
+      const level = e.target.dataset.level;
+      currentQuestions = questionBank[level];
+      elements.levelSelection.style.display = 'none';
+      elements.resultContainer.style.display = 'none';
+      elements.quizContainer.style.display = 'block';
+      currentQuestion = 0;
+      score = 0;
+      elements.progressBar.style.width = '1%';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      elements.currentQuestionSpan.textContent = currentQuestion + 1;
+      elements.progressBar.style.width = `${((currentQuestion + 1) / currentQuestions.length) * 100}%`;
+
+      const q = currentQuestions[currentQuestion];
+      elements.questionText.textContent = q.question;
+      elements.optionsContainer.innerHTML = '';
+      elements.explanation.style.display = 'none';
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.addEventListener('click', () => handleAnswer(index));
+        elements.optionsContainer.appendChild(button);
+      });
+    }
+
+    function handleAnswer(selectedIndex) {
+      const options = document.querySelectorAll('.option-btn');
+      const correctIndex = currentQuestions[currentQuestion].answer;
+
+      options.forEach(option => option.classList.add('disabled'));
+
+      if (selectedIndex === correctIndex) {
+        options[selectedIndex].classList.add('correct');
+        elements.explanation.textContent = currentQuestions[currentQuestion].explanation;
+        elements.explanation.style.display = 'block';
+        score++;
+        setTimeout(nextQuestion, 4000);
+      } else {
+        options[selectedIndex].classList.add('wrong');
+        options[correctIndex].classList.add('correct');
+        setTimeout(() => {
+          options.forEach(option => {
+            option.classList.remove('disabled', 'correct', 'wrong');
+          });
+        }, 1500);
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < currentQuestions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      elements.quizContainer.style.display = 'none';
+      elements.resultContainer.style.display = 'block';
+      elements.scoreText.textContent = `${score}/${currentQuestions.length}`;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      elements.resultContainer.style.display = 'none';
+      elements.levelSelection.style.display = 'block';
+      elements.progressBar.style.width = '1%';
+    }
+
+    function backToLevelSelection() {
+      // Reset quiz variables and show level selection screen
+      currentQuestion = 0;
+      score = 0;
+      elements.quizContainer.style.display = 'none';
+      elements.resultContainer.style.display = 'none';
+      elements.levelSelection.style.display = 'block';
+      elements.progressBar.style.width = '1%';
+    }
+</script>
+</body>
+</html>
